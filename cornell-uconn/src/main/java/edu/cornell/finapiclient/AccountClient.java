@@ -1,6 +1,7 @@
 package edu.cornell.finapiclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -11,6 +12,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class AccountClient {
@@ -34,7 +36,27 @@ public class AccountClient {
         System.out.println("sort: " + sort);
         int totalCount = (Integer)accounts.get("totalCount");
         System.out.println("totalCount: " + totalCount);
-        //"""query":{"chartOfAccountsCode":"BL"},"limit":200,"skip":0,"sort":["chartOfAccountsCode","accountNumber"],"totalCount":2525,"results":""
+        List<Map<String, Object>> results = (List<Map<String, Object>>)accounts.get("results");
+        System.out.println(results.size());
+        System.out.println("\n");
+        System.out.println("chartOfAccountsCode,accountNumber,accountName,organizationCode,subFundGroupCode");
+        for (Map<String, Object> result: results) {
+            StringBuilder outputLine = new StringBuilder();
+            for (String key: result.keySet()) {
+                if (isFieldToOutput(key)) {
+                    outputLine.append(result.get(key));
+                    outputLine.append(",");
+                }
+            }
+            if (outputLine.length() > 0) {
+                System.out.println(outputLine.toString().substring(0, outputLine.length() - 1));
+            }
+        }
+    }
+
+    private static boolean isFieldToOutput(String key) {
+        return key.equals("chartOfAccountsCode") || key.equals("accountNumber") || key.equals("accountName") ||
+                key.equals("organizationCode") || key.equals("subFundGroupCode");
     }
 
     public HttpResponse getAccounts() throws IOException {
