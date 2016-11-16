@@ -1,0 +1,11 @@
+{
+  "name": "csu-arizona",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "co": "^4.6.0",
+    "lodash": "^4.17.2",
+    "node-fetch": "^1.6.3"
+  }
+}
